@@ -3,6 +3,7 @@ from flask_bcrypt import generate_password_hash, check_password_hash
 from config import get_db_connection
 from flask_login import login_user, login_required, logout_user, current_user
 from models import User
+from routes.plans_routes import plans_bp
 
 auth = Blueprint('auth', __name__)
 
