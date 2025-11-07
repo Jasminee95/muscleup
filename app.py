@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify
 from flask_cors import CORS
 from config import Config
 from routes.auth_routes import auth
@@ -28,6 +28,10 @@ def load_user(user_id):
 @app.route('/')
 def home():
     return {"message": "it works!"}
+
+@app.errorhandler(500)
+def server_error(e):
+    return jsonify({"error": "Internal server error"}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)

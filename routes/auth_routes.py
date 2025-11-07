@@ -3,7 +3,6 @@ from flask_bcrypt import generate_password_hash, check_password_hash
 from config import get_db_connection
 from flask_login import login_user, login_required, logout_user, current_user
 from models import User
-from routes.plans_routes import plans_bp
 
 auth = Blueprint('auth', __name__)
 
@@ -11,7 +10,7 @@ auth = Blueprint('auth', __name__)
 def register():
     data = request.get_json()
     username = data.get('username')
-    email = data.get('email')
+    email = data.get('email' '').strip().lower()
     password = data.get('password')
 
     if not username or not email or not password:
@@ -40,7 +39,7 @@ def register():
 @auth.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
-    email = data.get('email')
+    email = data.get('email', '').strip().lower()
     password = data.get('password')
 
     conn = get_db_connection()
@@ -66,11 +65,12 @@ def logout():
     logout_user()
     return jsonify({'message': 'Logged out successfully'}), 200
 
-@auth.route('/profile', methods=['GET'])
+@auth.route("/me", methods=["GET"])
 @login_required
-def profile():
-    return jsonify({
+def get_current_user():
+    user_data = {
         "id": current_user.id,
-        "email": current_user.email,
-        "username": current_user.username
-    })
+        "username": current_user.username,
+        "email": current_user.email
+    }
+    return jsonify(user_data), 200
