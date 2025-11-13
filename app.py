@@ -10,7 +10,12 @@ from routes.exercises_routes import  exercises_bp
 
 app = Flask(__name__)
 app.config.from_object(Config)
-CORS(app, supports_credentials=True, origins=["http://localhost:3000"])
+CORS(app, supports_credentials=True, origins=["https://localhost:3000"])
+#CORS(
+ #   app,
+  #  resources={r"/*": {"origins": ["http://127.0.0.1:3000"]}},
+   # supports_credentials=True,
+#)
 
 app.register_blueprint(auth, url_prefix='/auth')
 app.register_blueprint(plans_bp, url_prefix='/plans_bp')
@@ -19,11 +24,15 @@ app.register_blueprint(exercises_bp, url_prefix='/api')
 
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = 'auth.login'
+login_manager.login_view = None
 
 @login_manager.user_loader
 def load_user(user_id):
     return get_user_by_id(user_id)
+
+@login_manager.unauthorized_handler
+def unauthorized_callback():
+    return jsonify({"error": "Unauthorized"}), 401
 
 @app.route('/')
 def home():
@@ -34,4 +43,4 @@ def server_error(e):
     return jsonify({"error": "Internal server error"}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port = 8080)
