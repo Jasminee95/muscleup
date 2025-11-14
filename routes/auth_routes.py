@@ -26,7 +26,7 @@ def register():
         conn.close()
         return jsonify({"error": "User already exists"}), 400
 
-    hashed_pw = generate_password_hash(password).decode("utf-8")
+    hashed_pw = generate_password_hash(password)
     cursor.execute(
         "INSERT INTO users (email, password_hash, username) VALUES (%s, %s, %s)",
         (email, hashed_pw, username),
