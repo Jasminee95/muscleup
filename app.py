@@ -10,12 +10,14 @@ from routes.exercises_routes import  exercises_bp
 
 app = Flask(__name__)
 app.config.from_object(Config)
-CORS(app, supports_credentials=True, origins=["http://localhost:3000"])
-#CORS(
- #   app,
-  #  resources={r"/*": {"origins": ["http://127.0.0.1:3000"]}},
-   # supports_credentials=True,
-#)
+
+CORS(
+    app,
+    supports_credentials=True,
+    origins=["http://localhost:3000"],
+    allow_headers=["Content-Type", "Authorization"],
+    expose_headers=["Content-Type", "Authorization"]
+)
 
 app.register_blueprint(auth, url_prefix='/auth')
 app.register_blueprint(plans_bp, url_prefix='/plans_bp')

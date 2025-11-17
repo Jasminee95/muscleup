@@ -8,7 +8,7 @@ from models import User
 auth = Blueprint("auth", __name__)
 
 @auth.route("/register", methods=["POST"])
-@cross_origin(origins="http://localhost:3000", supports_credentials=True)
+@cross_origin(origins=["http://localhost:3000", "http://127.0.0.1:3000"], supports_credentials=True)
 def register():
     data = request.get_json()
     username = data.get("username")
@@ -37,7 +37,7 @@ def register():
 
 
 @auth.route("/login", methods=["POST"])
-@cross_origin(origins="http://localhost:3000", supports_credentials=True)
+@cross_origin(origins=["http://localhost:3000", "http://127.0.0.1:3000"], supports_credentials=True)
 def login():
     data = request.get_json()
     email = data.get("email", "").strip().lower()
@@ -58,7 +58,7 @@ def login():
 
 
 @auth.route("/logout", methods=["POST"])
-@cross_origin(origins="http://localhost:3000", supports_credentials=True)
+@cross_origin(origins=["http://localhost:3000", "http://127.0.0.1:3000"], supports_credentials=True)
 @login_required
 def logout():
     logout_user()
@@ -66,7 +66,7 @@ def logout():
 
 
 @auth.route("/me", methods=["GET"])
-@cross_origin(origins="http://localhost:3000", supports_credentials=True)
+@cross_origin(origins=["http://localhost:3000", "http://127.0.0.1:3000"], supports_credentials=True)
 @login_required
 def get_current_user():
     if not current_user.is_authenticated:
