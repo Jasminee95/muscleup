@@ -2,9 +2,9 @@ from flask import Blueprint, jsonify, request
 from flask_login import login_required, current_user
 from config import get_db_connection
 
-favorites_bp = Blueprint("favorites_bn", __name__)
+favorites_bp = Blueprint("favorites_bp", __name__)
 
-@favorites_bp.route('', methods=['GET'])
+@favorites_bp.route('/favorites', methods=['GET'])
 @login_required
 def get_favorites():
     conn = get_db_connection()
@@ -14,7 +14,7 @@ def get_favorites():
     conn.close()
     return jsonify(favorites), 200
 
-@favorites_bp.route('', methods=['POST'])
+@favorites_bp.route('/favorites', methods=['POST'])
 @login_required
 def add_favorites():
     data = request.get_json()

@@ -11,17 +11,21 @@ def get_exercises():
     if not search:
         return jsonify({"data": [], "success": True}), 200
 
-    url = f"https://exercisedb-api1.p.rapidapi.com/api/v1/exercises/name={search}"
+    url = f"https://exercisedb-api1.p.rapidapi.com/api/v1/exercises/search?search={search}"
 
     headers = {
         "x-rapidapi-key": os.getenv("EXERCISE_API_KEY"),
         "x-rapidapi-host": "exercisedb-api1.p.rapidapi.com"
     }
 
+
     try:
         response = requests.get(url, headers=headers)
         response.raise_for_status()
-        exercises = response.json()
+        api_res = response.json()
+
+
+        exercises = api_res.get("data", [])
 
         return jsonify({
             "data": exercises,

@@ -8,6 +8,9 @@ from routes.plans_routes import plans_bp
 from routes.favorites_routes import  favorites_bp
 from routes.exercises_routes import  exercises_bp
 
+
+
+
 app = Flask(__name__)
 app.config.from_object(Config)
 
@@ -20,8 +23,8 @@ CORS(
 )
 
 app.register_blueprint(auth, url_prefix='/auth')
-app.register_blueprint(plans_bp, url_prefix='/plans_bp')
-app.register_blueprint(favorites_bp, url_prefix='/favorites')
+app.register_blueprint(plans_bp, url_prefix='/api')
+app.register_blueprint(favorites_bp, url_prefix='/api')
 app.register_blueprint(exercises_bp, url_prefix='/api')
 
 login_manager = LoginManager()
