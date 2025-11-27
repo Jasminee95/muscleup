@@ -7,9 +7,9 @@ from models import get_user_by_id
 from routes.plans_routes import plans_bp
 from routes.favorites_routes import  favorites_bp
 from routes.exercises_routes import  exercises_bp
+from dotenv import load_dotenv
 
-
-
+load_dotenv()
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -18,6 +18,7 @@ CORS(
     app,
     supports_credentials=True,
     origins=["http://localhost:3000"],
+    methods = ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["Content-Type", "Authorization"],
     expose_headers=["Content-Type", "Authorization"]
 )

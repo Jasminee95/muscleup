@@ -36,9 +36,12 @@ def add_favorites():
     conn.close()
     return jsonify({"message": "Favorite added!"}), 201
 
-@favorites_bp.route('/<exercise_id>', methods=['DELETE'])
+@favorites_bp.route('/favorites/<exercise_id>', methods=['DELETE'])
 @login_required
 def delete_favorite(exercise_id):
+    if request.method == "OPTIONS":
+        return jsonify({"status": "ok"}), 200
+
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute("DELETE FROM favorites WHERE user_id = %s AND exercise_id = %s",

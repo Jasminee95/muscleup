@@ -1,36 +1,38 @@
 from flask import Blueprint, jsonify, request
 import requests
-import os
 
 exercises_bp = Blueprint("exercises_bp", __name__)
 
+BASE_URL = "https://exercisedb-api.vercel.app/api/v1/exercises"
+
+
 @exercises_bp.route("/exercises", methods=["GET"])
 def get_exercises():
-    search = request.args.get("search", "").lower()
+    search = request.args.get("search", "").strip().lower()
 
     if not search:
         return jsonify({"data": [], "success": True}), 200
 
-    url = f"https://exercisedb-api1.p.rapidapi.com/api/v1/exercises/search?search={search}"
-
-    headers = {
-        "x-rapidapi-key": os.getenv("EXERCISE_API_KEY"),
-        "x-rapidapi-host": "exercisedb-api1.p.rapidapi.com"
-    }
-
-
     try:
-        response = requests.get(url, headers=headers)
-        response.raise_for_status()
-        api_res = response.json()
+        url = f"{BASE_URL}?search={search}"
+        response = requests.get(url)
+        raw = response.json()
 
+        exercises = raw.get("data", [])
 
-        exercises = api_res.get("data", [])
+        mapped = []
+        for ex in exercises:
+            mapped.append({
+                "exerciseId": ex.get("exerciseId"),
+                "name": ex.get("name"),
+                "bodyPart": (ex.get("bodyParts") or [None])[0],
+                "target": (ex.get("targetMuscles") or [None])[0],
+                "equipment": (ex.get("equipments") or [None])[0],
+                "imageUrl": ex.get("gifUrl"),
+            })
 
-        return jsonify({
-            "data": exercises,
-            "success": True
-        }), 200
+        return jsonify({"data": mapped, "success": True}), 200
 
-    except requests.exceptions.RequestException as e:
-        return jsonify({"error": str(e)}), 500
+    except Exception as e:
+        print("API error:", e)
+        return jsonify({"success": False, "error": str(e)}), 500
